@@ -11,6 +11,7 @@ export async function POST(req: NextRequest) {
     try {
       //validation with zod should be added
       event = Object.fromEntries(formData.entries());
+      console.log({ event });
     } catch (error) {
       return NextResponse.json(
         { message: "Invalid JSON Format" },
@@ -42,8 +43,8 @@ export async function POST(req: NextRequest) {
         .end(buffer);
     });
 
-    const tags = JSON.parse(formData.get("tags") as string);
-    const agenda = JSON.parse(formData.get("agenda") as string);
+    const tags = (formData.get("tags") as string).split(",");
+    const agenda = (formData.get("agenda") as string).split(",");
 
     event.image = (uploadResult as { secure_url: string }).secure_url;
 

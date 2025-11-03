@@ -271,3 +271,33 @@
     }
   }
 }
+
+#add-event {
+  @apply flex flex-col gap-6;
+  input,
+  textarea {
+    @apply w-full;
+  }
+  form {
+    @apply flex flex-col gap-6;
+
+    div {
+      @apply flex flex-col gap-2;
+
+      input,
+      textarea {
+        @apply bg-dark-200 rounded-[6px] px-5 py-2.5 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary;
+
+        &::placeholder {
+          @apply text-gray-400;
+        }
+      }
+
+      input[type="file"] {
+        @apply bg-dark-200 text-white rounded-[6px] px-5 py-2.5 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary;
+        cursor: pointer;
+        padding-left: 0; /* Adjust padding for file input */
+      }
+    }
+  }
+}

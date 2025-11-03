@@ -1,7 +1,7 @@
 import { Schema, model, models, Document } from "mongoose";
 
 // TypeScript interface for Event document
-export interface IEvent extends Document {
+export interface IEvent {
   title: string;
   slug: string;
   description: string;
@@ -20,7 +20,9 @@ export interface IEvent extends Document {
   updatedAt: Date;
 }
 
-const EventSchema = new Schema<IEvent>(
+export interface EventSchema extends Document, IEvent {}
+
+const EventSchema = new Schema<EventSchema>(
   {
     title: {
       type: String,
@@ -111,7 +113,7 @@ const EventSchema = new Schema<IEvent>(
 
 // Pre-save hook for slug generation and data normalization
 EventSchema.pre("save", function (next) {
-  const event = this as IEvent;
+  const event = this as EventSchema;
 
   // Generate slug only if title changed or document is new
   if (event.isModified("title") || event.isNew) {
@@ -189,6 +191,6 @@ EventSchema.index({ slug: 1 }, { unique: true });
 // Create compound index for common queries
 EventSchema.index({ date: 1, mode: 1 });
 
-const Event = models.Event || model<IEvent>("Event", EventSchema);
+const Event = models.Event || model<EventSchema>("Event", EventSchema);
 
 export default Event;

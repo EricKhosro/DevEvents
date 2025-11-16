@@ -1,6 +1,7 @@
 "use client";
 
 import { IEvent } from "@/database";
+import Image from "next/image";
 import { ChangeEvent, useState } from "react";
 import toast from "react-hot-toast";
 
@@ -113,26 +114,41 @@ const CreateEvent = () => {
             />
             <input
               name="date"
-              placeholder="Date"
+              placeholder="Date (2026-06-06)"
               value={formValues.date}
               onChange={changeHandler}
             />
             <input
               name="time"
-              placeholder="Time"
+              placeholder="Time (10:10)"
               value={formValues.time}
               onChange={changeHandler}
             />
             <label className="relative flex items-center justify-center hover:bg-dark-300 text-white cursor-pointer w-full bg-dark-200 rounded-[6px] px-5 py-2.5 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary">
-              <span className="text-sm text-gray-400">
-                Upload event image or banner
-              </span>
-              <input
-                type="file"
-                className="absolute inset-0 opacity-0 cursor-pointer"
-                accept=".jpg"
-                onChange={handleImageChange}
-              />
+              <div className="text-sm text-gray-400 flex flex-row! justify-start items-center gap-2">
+                <p>{image ? image.name : "Upload event image or banner"}</p>
+                {image ? (
+                  <Image
+                    src="/icons/delete.svg"
+                    alt="delete"
+                    width={16}
+                    height={16}
+                    onClick={() => setImage(null)}
+                  />
+                ) : (
+                  <></>
+                )}
+              </div>
+              {!image ? (
+                <input
+                  type="file"
+                  className="absolute inset-0 opacity-0 cursor-pointer"
+                  accept=".png"
+                  onChange={handleImageChange}
+                />
+              ) : (
+                <></>
+              )}
             </label>
             <input
               name="venue"

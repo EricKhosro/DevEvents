@@ -7,8 +7,8 @@ import Link from "next/link";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 const Page = async () => {
-  "use cache";
-  cacheLife("hours");
+  // "use cache";
+  // cacheLife("hours");
   const res = await fetch(`${BASE_URL}/api/events`);
   const events = await res.json();
 

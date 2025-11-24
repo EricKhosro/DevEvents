@@ -6,9 +6,12 @@ type RouteParam = {
   slug: string;
 };
 
-export async function GET(req: NextRequest, param: Promise<RouteParam>) {
-  const slug = (await param).slug;
-
+export async function GET(
+  req: NextRequest,
+  { params }: { params: Promise<RouteParam> }
+) {
+  const { slug } = await params;
+  console.log({ slug });
   try {
     await connectDB();
 

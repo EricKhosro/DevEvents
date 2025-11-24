@@ -12,7 +12,7 @@ interface IProps {
 
 const EventCard = ({ image, title, date, location, slug, time }: IProps) => {
   return (
-    <Link href={`/events/${slug}`} id="event-card">
+    <Link href={`/event/${slug}`} id="event-card">
       <Image
         src={image}
         alt={title}

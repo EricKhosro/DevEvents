@@ -49,25 +49,25 @@ const EventDetails = async ({
   params: Promise<{ slug: string }>;
 }) => {
   "use cache";
-  cacheLife("hours");
+  cacheLife("seconds");
   const slug = (await params).slug;
   let event;
   try {
-    const request = await fetch(`${BASE_URL}/api/events/${slug}`, {
-      next: { revalidate: 60 },
+    const response = await fetch(`${BASE_URL}/api/events/${slug}`, {
+      next: { revalidate: 5 },
     });
-
-    if (!request.ok) {
-      if (request.status === 404) {
+    console.log({ response, ok: response.ok });
+    if (!response.ok) {
+      if (response.status === 404) {
         return notFound();
       }
-      throw new Error(`Failed to fetch event: ${request.statusText}`);
+      throw new Error(`Failed to fetch event: ${response.statusText}`);
     }
 
-    const response = await request.json();
-    event = response.event;
+    const data = await response.json();
+    event = data;
 
-    if (!event) {
+    if (!event || !event.title) {
       return notFound();
     }
   } catch (error) {

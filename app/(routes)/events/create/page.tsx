@@ -1,7 +1,6 @@
 "use client";
 
-import { IEvent } from "@/database";
-import { updateTag } from "next/cache";
+import { IEvent } from "@/shared/types/event.types";
 import Image from "next/image";
 import { ChangeEvent, useState } from "react";
 import toast from "react-hot-toast";

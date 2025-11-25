@@ -1,24 +1,5 @@
+import { IEvent } from "@/shared/types/event.types";
 import { Schema, model, models, Document } from "mongoose";
-
-// TypeScript interface for Event document
-export interface IEvent {
-  title: string;
-  slug: string;
-  description: string;
-  overview: string;
-  image: string;
-  venue: string;
-  location: string;
-  date: string;
-  time: string;
-  mode: string;
-  audience: string;
-  agenda: string[];
-  organizer: string;
-  tags: string[];
-  createdAt: Date;
-  updatedAt: Date;
-}
 
 export interface EventSchema extends Document, IEvent {}
 

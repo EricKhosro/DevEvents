@@ -1,5 +1,5 @@
-import { Event } from "@/database";
-import connectDB from "@/lib/mongodb";
+import Event from "@/server/modules/event/event.model";
+import connectDB from "@/server/db/mongodb";
 import { NextRequest, NextResponse } from "next/server";
 
 type RouteParam = {
@@ -11,7 +11,6 @@ export async function GET(
   { params }: { params: Promise<RouteParam> }
 ) {
   const { slug } = await params;
-  console.log({ slug });
   try {
     await connectDB();
 

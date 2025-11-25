@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "debug-build": "next build --debug-prerender",
     "start": "next start",
     "lint": "eslint"
   },

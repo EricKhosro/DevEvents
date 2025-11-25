@@ -1,6 +1,6 @@
-import { Event } from "@/database";
+import Event from "@/server/modules/event/event.model";
 import { v2 as cloudinary } from "cloudinary";
-import connectDB from "@/lib/mongodb";
+import connectDB from "@/server/db/mongodb";
 import { NextRequest, NextResponse } from "next/server";
 import { revalidateTag } from "next/cache";
 

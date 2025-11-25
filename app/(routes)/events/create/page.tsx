@@ -1,6 +1,7 @@
 "use client";
 
 import { IEvent } from "@/database";
+import { updateTag } from "next/cache";
 import Image from "next/image";
 import { ChangeEvent, useState } from "react";
 import toast from "react-hot-toast";
@@ -50,6 +51,7 @@ const CreateEvent = () => {
       const data = await res.json();
       toast.success(data.msg);
     } catch (error) {
+      console.log(error);
       toast.error("Error in Creating Event!");
     }
   };

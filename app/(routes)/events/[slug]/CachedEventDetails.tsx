@@ -23,7 +23,7 @@ const EventAgenda = ({ agendaItems }: { agendaItems: string[] }) => (
   <div className="agenda">
     <h2>Agenda</h2>
     <ul>
-      {agendaItems.map((item) => (
+      {agendaItems?.map((item) => (
         <li key={item}>{item}</li>
       ))}
     </ul>
@@ -32,7 +32,7 @@ const EventAgenda = ({ agendaItems }: { agendaItems: string[] }) => (
 
 const EventTags = ({ tags }: { tags: string[] }) => (
   <div className="flex flex-row gap-1.5 flex-wrap">
-    {tags.map((tag) => (
+    {tags?.map((tag) => (
       <div className="pill" key={tag}>
         {tag}
       </div>
@@ -54,19 +54,20 @@ const CachedEventDetails = async ({
     const response = await fetch(`${BaseUrl}/api/events/${slug}`);
     if (!response.ok) {
       if (response.status === 404) {
-        return notFound();
+        notFound();
       }
       throw new Error(`Failed to fetch event: ${response.statusText}`);
     }
 
     event = await response.json();
+    console.log({ event });
 
-    if (!event || !event.title) {
-      return notFound();
+    if (!event.title) {
+      notFound();
     }
   } catch (error) {
     console.error("Error fetching event:", error);
-    return notFound();
+    notFound();
   }
   const bookings = 10;
 

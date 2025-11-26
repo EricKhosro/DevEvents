@@ -3,12 +3,7 @@ import { v2 as cloudinary } from "cloudinary";
 import createHttpError from "http-errors";
 
 export const EventService = {
-  async createEvent(
-    eventDTO: any,
-    file: File,
-    tags: string,
-    agenda: string
-  ) {
+  async createEvent(eventDTO: any, file: File, tags: string, agenda: string) {
     try {
       // Convert file to buffer and upload to Cloudinary
       const arrayBuffer = await file.arrayBuffer();
@@ -50,5 +45,16 @@ export const EventService = {
     } catch (error) {
       throw createHttpError.InternalServerError("Error fetching events");
     }
+  },
+
+  async fetchEventBySlug(slug: string) {
+    const sanitizedSlug = slug.trim().toLowerCase();
+    const event = await Event.findOne({ slug: sanitizedSlug }).lean();
+
+    if (!event) {
+      throw Error("Event Not Found", { cause: "Event Service" });
+    }
+
+    return event;
   },
 };

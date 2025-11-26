@@ -1,16 +1,17 @@
 import Event from "@/server/modules/event/event.model";
-import { v2 as cloudinary } from "cloudinary";
 import connectDB from "@/server/db/mongodb";
 import { NextRequest, NextResponse } from "next/server";
 import { revalidateTag } from "next/cache";
+import { EventService } from "@/server/modules/event/event.service";
 
 export async function POST(req: NextRequest) {
   try {
     await connectDB();
+
     const formData = await req.formData();
     let event;
     try {
-      //validation with zod should be added
+      // Validation could be added here (e.g., with Zod or Joi)
       event = Object.fromEntries(formData.entries());
       console.log({ event });
     } catch (error) {
@@ -19,48 +20,31 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
+
     const file = formData.get("image") as File;
-    if (!file)
+    if (!file) {
       return NextResponse.json(
         { message: "Image is required" },
         { status: 400 }
       );
+    }
 
-    const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
+    const tags = formData.get("tags") as string;
+    const agenda = formData.get("agenda") as string;
 
-    const uploadResult = await new Promise((res, rej) => {
-      cloudinary.uploader
-        .upload_stream(
-          {
-            resource_type: "image",
-            folder: "DevEvent",
-          },
-          (error, result) => {
-            if (error) return rej(error);
-            res(result);
-          }
-        )
-        .end(buffer);
-    });
-
-    const tags = (formData.get("tags") as string).split(",");
-    const agenda = (formData.get("agenda") as string).split(",");
-
-    event.image = (uploadResult as { secure_url: string }).secure_url;
-
-    const createdEvent = await Event.create({
-      ...event,
+    // Call service to create the event
+    const createdEvent = await EventService.createEvent(
+      event,
+      file,
       tags,
-      agenda,
-    });
+      agenda
+    );
+
+    // Revalidate the cache (assuming you're caching event list)
     revalidateTag("events", { expire: 0 });
 
     return NextResponse.json(
-      {
-        message: "Event Created Successfully",
-        event: createdEvent,
-      },
+      { message: "Event Created Successfully", event: createdEvent },
       { status: 201 }
     );
   } catch (error) {

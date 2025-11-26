@@ -47,8 +47,8 @@ const CachedEventDetails = async ({
 }) => {
   "use cache";
   cacheLife("hours");
-  cacheTag("eventDetails");
   const { slug } = await params;
+  cacheTag(slug);
   let event = {} as IEvent;
   try {
     const response = await fetch(`${BaseUrl}/api/events/${slug}`);
@@ -60,7 +60,6 @@ const CachedEventDetails = async ({
     }
 
     event = await response.json();
-    console.log({ event });
 
     if (!event.title) {
       notFound();

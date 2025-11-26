@@ -13,7 +13,6 @@ export async function POST(req: NextRequest) {
     try {
       // Validation could be added here (e.g., with Zod or Joi)
       event = Object.fromEntries(formData.entries());
-      console.log({ event });
     } catch (error) {
       return NextResponse.json(
         { message: "Invalid JSON Format" },

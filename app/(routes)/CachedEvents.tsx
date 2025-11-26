@@ -1,18 +1,18 @@
-
 import EventCard from "@/components/EventCard";
 import { IEvent } from "@/shared/types/event.types";
 import { BaseUrl } from "@/shared/utils/env.utils";
 import { cacheLife, cacheTag } from "next/cache";
 
 const CachedEvents = async () => {
-//   cacheLife("hours");
-//   cacheTag("events");
+  "use cache";
+  cacheLife("hours");
+  cacheTag("events");
 
   const response = await fetch(`${BaseUrl}/api/events`);
   const events = await response.json();
 
   return (
-    <div className="mt-20 space-y-7">
+    <div className="pt-20 space-y-7" id="cached-events">
       <h3>Featured Events</h3>
       <ul className="events">
         {events && events.length ? (

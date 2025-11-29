@@ -1,53 +1,12 @@
-"use client";
+import { getUserInfo } from "@/server/modules/user/user.action";
+import FormsWrapper from "./FormsWrapper";
+import { redirect } from "next/navigation";
 
-import Tabbox from "@/components/base/Tabbox";
-import { ITab } from "@/shared/types/components.types";
-import { useState } from "react";
-import LoginForm from "./LoginForm";
-import RegisterForm from "./RegisterForm";
-import GithubButton from "@/components/GithubButton";
-import { signIn } from "next-auth/react";
+const AuthPage = async () => {
+  const user = await getUserInfo();
+  if (user) redirect("/");
 
-enum ActiveTab {
-  Register,
-  Login,
-}
-
-const Auth = () => {
-  const [activeTab, setActiveTab] = useState(ActiveTab.Login);
-
-  const tabs: ITab[] = [
-    {
-      index: ActiveTab.Register,
-      title: "Register",
-    },
-    {
-      index: ActiveTab.Login,
-      title: "Login",
-    },
-  ];
-
-  return (
-    <div className="flex flex-col justify-start items-center w-full md:w-xl mx-auto">
-      <Tabbox tabs={tabs} onChange={setActiveTab} activeTab={activeTab} />
-      <form className="mt-10 flex flex-col justify-start items-start gap-8 w-full px-5">
-        {activeTab === ActiveTab.Login ? (
-          <LoginForm />
-        ) : (
-          <RegisterForm
-            onSuccessfulRegister={() => setActiveTab(ActiveTab.Login)}
-          />
-        )}
-        <div className="w-full -mt-3">
-          <GithubButton
-            onClick={() => {
-              signIn("github");
-            }}
-          />
-        </div>
-      </form>
-    </div>
-  );
+  return <FormsWrapper />;
 };
 
-export default Auth;
+export default AuthPage;

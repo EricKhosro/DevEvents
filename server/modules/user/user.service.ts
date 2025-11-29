@@ -33,6 +33,7 @@ export const UserService = {
     const hashedPassword = await hash(password, salt);
 
     const newUser = await User.create({
+      username,
       email,
       password: hashedPassword,
     });

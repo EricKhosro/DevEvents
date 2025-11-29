@@ -4,6 +4,7 @@ import "./globals.css";
 import LightRays from "@/components/LightRays";
 import Navbar from "@/components/layout/Navbar";
 import { Toaster } from "react-hot-toast";
+import { Suspense } from "react";
 
 const schibstedGrotesk = Schibsted_Grotesk({
   variable: "--font-schibsted-grotesk",
@@ -30,7 +31,9 @@ export default async function RootLayout({
       <body
         className={`${schibstedGrotesk.variable} ${martianMono.variable} min-h-screen antialiased`}
       >
-        <Navbar />
+        <Suspense>
+          <Navbar />
+        </Suspense>
         <div className="absolute inset-0 top-0 z-[-1] min-h-screen">
           <LightRays
             raysOrigin="top-center-offset"

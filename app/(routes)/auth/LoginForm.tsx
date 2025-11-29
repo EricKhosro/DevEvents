@@ -50,11 +50,11 @@ const LoginForm = () => {
   return (
     <>
       <TextInput
-        label="Email"
-        name="email"
+        label="Username"
+        name="username"
         onChange={changeHandler}
-        placeholder="Enter your email"
-        value={formValues.email}
+        placeholder="Enter your username"
+        value={formValues.username}
       />
       <TextInput
         label="Password"

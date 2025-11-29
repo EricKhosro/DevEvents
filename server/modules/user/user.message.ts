@@ -3,7 +3,7 @@ export enum UserMessages {
   UsernameExists = "Username is Already Registered",
   Register = "Account Created Successfully",
   Login = "Successful Login",
-  NotFound = "Email Not Found",
+  NotFound = "User Not Found",
   InvalidCredentials = "Email or Password is Invalid!",
   NotSamePasswords = "Passwords are Not Equal!",
   InvalidEmail = "Invalid Email",

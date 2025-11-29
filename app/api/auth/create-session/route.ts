@@ -3,6 +3,7 @@ import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 import cookie from "cookie";
 import { errorHandler } from "@/server/middlewares/errorHandler";
+import { AuthTokenCookieName } from "@/shared/constants/cookie.constant";
 
 export const GET = async (req: NextRequest) => {
   const JWT_PRIVATE_KEY = process.env.JWT_PRIVATE_KEY!;
@@ -21,7 +22,7 @@ export const GET = async (req: NextRequest) => {
     };
 
     const cookieHeader = cookie.serialize(
-      "auth_token",
+      AuthTokenCookieName,
       appToken,
       cookieOptions
     );

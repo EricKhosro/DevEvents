@@ -5,6 +5,7 @@ import { SharedMessages } from "@/shared/utils/shared.messages";
 import createHttpError from "http-errors";
 import { NextRequest, NextResponse } from "next/server";
 import cookie from "cookie";
+import { AuthTokenCookieName } from "@/shared/constants/cookie.constant";
 
 export const POST = async (req: NextRequest) => {
   try {
@@ -20,7 +21,11 @@ export const POST = async (req: NextRequest) => {
       path: "/",
     };
 
-    const cookieHeader = cookie.serialize("auth_token", token, cookieOptions);
+    const cookieHeader = cookie.serialize(
+      AuthTokenCookieName,
+      token,
+      cookieOptions
+    );
 
     return NextResponse.json(
       { message: UserMessages.Login },

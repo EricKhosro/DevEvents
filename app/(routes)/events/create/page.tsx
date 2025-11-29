@@ -1,5 +1,8 @@
 "use client";
 
+import StaticDropdown from "@/components/base/Dropdown/StaticDropdown";
+import TextArea from "@/components/base/TextArea";
+import TextInput from "@/components/base/TextInput";
 import { IEvent } from "@/shared/types/event.types";
 import Image from "next/image";
 import { ChangeEvent, useState } from "react";
@@ -55,21 +58,14 @@ const CreateEvent = () => {
     }
   };
 
-  const changeHandler = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
+  const changeHandler = (name: string, value: any) => {
     setFormValues({ ...formValues, [name]: value });
   };
 
-  const handleArrayChange = (
-    e: ChangeEvent<HTMLTextAreaElement>,
-    field: "agenda" | "tags"
-  ) => {
-    const value = e.target.value;
+  const handleArrayChange = (name: string, value: any) => {
     setFormValues({
       ...formValues,
-      [field]: value.split(",").map((item) => item.trim()),
+      [name]: value.split(",").map((item: string) => item.toString().trim()),
     });
   };
 
@@ -87,114 +83,130 @@ const CreateEvent = () => {
         id="add-event"
         className="w-[700px] max-w-full rounded-[10px] bg-dark-100 border border-dark-200 p-8"
       >
-        <form onSubmit={handleSubmit} className="w-full">
-          <div className="w-full space-y-4">
-            <input
-              name="title"
-              placeholder="Event Title"
-              value={formValues.title}
-              onChange={changeHandler}
-            />
-            <input
-              name="slug"
-              placeholder="Event Slug"
-              value={formValues.slug}
-              onChange={changeHandler}
-            />
-            <textarea
-              name="description"
-              placeholder="Event Description"
-              value={formValues.description}
-              onChange={changeHandler}
-            />
-            <textarea
-              name="overview"
-              placeholder="Event Overview"
-              value={formValues.overview}
-              onChange={changeHandler}
-            />
-            <input
-              name="date"
-              placeholder="Date (2026-06-06)"
-              value={formValues.date}
-              onChange={changeHandler}
-            />
-            <input
-              name="time"
-              placeholder="Time (10:10)"
-              value={formValues.time}
-              onChange={changeHandler}
-            />
-            <label className="relative flex items-center justify-center hover:bg-dark-300 text-white cursor-pointer w-full bg-dark-200 rounded-[6px] px-5 py-2.5 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary">
-              <div className="text-sm text-gray-400 flex flex-row! justify-start items-center gap-2">
-                <p>{image ? image.name : "Upload event image or banner"}</p>
-                {image ? (
-                  <Image
-                    src="/icons/delete.svg"
-                    alt="delete"
-                    width={16}
-                    height={16}
-                    onClick={() => setImage(null)}
-                  />
-                ) : (
-                  <></>
-                )}
-              </div>
-              {!image ? (
-                <input
-                  type="file"
-                  className="absolute inset-0 opacity-0 cursor-pointer"
-                  accept=".png"
-                  onChange={handleImageChange}
+        <form onSubmit={handleSubmit} className="w-full space-y-5">
+          <TextInput
+            name="title"
+            placeholder="Event Title"
+            value={formValues.title}
+            onChange={changeHandler}
+            label="Title"
+          />
+          <TextInput
+            name="slug"
+            label="Slug"
+            placeholder="Event Slug"
+            value={formValues.slug}
+            onChange={changeHandler}
+          />
+
+          <TextInput
+            name="date"
+            placeholder="Date (2026-06-06)"
+            value={formValues.date}
+            onChange={changeHandler}
+            label="Date"
+          />
+          <TextInput
+            label="Time"
+            name="time"
+            placeholder="Time (10:10)"
+            value={formValues.time}
+            onChange={changeHandler}
+          />
+          <label className="relative flex items-center justify-center hover:bg-dark-300 text-white cursor-pointer w-full bg-dark-200 rounded-[6px] px-5 py-2.5 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary">
+            <div className="text-sm text-gray-400 flex flex-row! justify-start items-center gap-2">
+              <p>{image ? image.name : "Upload event image or banner"}</p>
+              {image ? (
+                <Image
+                  src="/icons/delete.svg"
+                  alt="delete"
+                  width={16}
+                  height={16}
+                  onClick={() => setImage(null)}
                 />
               ) : (
                 <></>
               )}
-            </label>
-            <input
-              name="venue"
-              placeholder="Venue"
-              value={formValues.venue}
-              onChange={changeHandler}
-            />
-            <input
-              name="location"
-              placeholder="Location"
-              value={formValues.location}
-              onChange={changeHandler}
-            />
+            </div>
+            {!image ? (
+              <input
+                type="file"
+                className="absolute inset-0 opacity-0 cursor-pointer"
+                accept=".png"
+                onChange={handleImageChange}
+              />
+            ) : (
+              <></>
+            )}
+          </label>
+          <TextInput
+            label="Venue"
+            name="venue"
+            placeholder="Venue"
+            value={formValues.venue}
+            onChange={changeHandler}
+          />
+          <TextInput
+            label="Location"
+            name="location"
+            placeholder="Location"
+            value={formValues.location}
+            onChange={changeHandler}
+          />
 
-            <input
-              name="mode"
-              placeholder="Event Mode"
-              value={formValues.mode}
-              onChange={changeHandler}
-            />
-            <input
-              name="audience"
-              placeholder="Target Audience"
-              value={formValues.audience}
-              onChange={changeHandler}
-            />
-            <textarea
-              name="agenda"
-              placeholder="Enter agenda items separated by commas (e.g. Opening Ceremony, Panel Discussion)"
-              value={formValues.agenda.join(", ")} // Display agenda items as comma-separated values
-              onChange={(e) => handleArrayChange(e, "agenda")}
-            />
-            <textarea
-              name="tags"
-              placeholder="Enter tags separated by commas (e.g. Tech, Networking, Business)"
-              value={formValues.tags.join(", ")} // Display tags as comma-separated values
-              onChange={(e) => handleArrayChange(e, "tags")}
-            />
-            <input
-              name="organizer"
-              placeholder="Organizer"
-              value={formValues.organizer}
-              onChange={changeHandler}
-            />
-          </div>
+          <StaticDropdown
+            options={[
+              { label: "Online", value: "online" },
+              { label: "Offline", value: "offline" },
+              { label: "Hybrid", value: "hybrid" },
+            ]}
+            name="mode"
+            label="Event Mode"
+            value={formValues.mode}
+            onChange={changeHandler}
+          />
+          <TextInput
+            name="audience"
+            placeholder="Target Audience"
+            value={formValues.audience}
+            onChange={changeHandler}
+            label="Audience"
+          />
+          <TextInput
+            name="organizer"
+            placeholder="Organizer"
+            value={formValues.organizer}
+            onChange={changeHandler}
+            label="Organizer"
+          />
+          <TextArea
+            name="description"
+            placeholder="Event Description"
+            value={formValues.description}
+            onChange={changeHandler}
+            label="Description"
+          />
+          <TextArea
+            name="overview"
+            placeholder="Event Overview"
+            value={formValues.overview}
+            onChange={changeHandler}
+            label="Overview"
+          />
+          <TextArea
+            label="Agenda"
+            name="agenda"
+            placeholder="Enter agenda items separated by commas (e.g. Opening Ceremony, Panel Discussion)"
+            value={formValues.agenda.join(", ")} // Display agenda items as comma-separated values
+            onChange={handleArrayChange}
+          />
+          <TextArea
+            label="Tags"
+            name="tags"
+            placeholder="Enter tags separated by commas (e.g. Tech, Networking, Business)"
+            value={formValues.tags.join(", ")} // Display tags as comma-separated values
+            onChange={(e) => handleArrayChange(e, "tags")}
+          />
 
           <button
             type="submit"

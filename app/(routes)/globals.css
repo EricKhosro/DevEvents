@@ -272,7 +272,7 @@
   }
 }
 
-#add-event {
+#add-event #auth-form {
   @apply flex flex-col gap-6;
   input,
   textarea {
@@ -300,4 +300,8 @@
       }
     }
   }
+}
+
+.google-btn svg {
+  border-radius: 8px !important;
 }

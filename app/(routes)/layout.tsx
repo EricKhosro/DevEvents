@@ -4,6 +4,7 @@ import "./globals.css";
 import LightRays from "@/components/LightRays";
 import Navbar from "@/components/layout/Navbar";
 import { Toaster } from "react-hot-toast";
+import { Suspense } from "react";
 
 const schibstedGrotesk = Schibsted_Grotesk({
   variable: "--font-schibsted-grotesk",
@@ -20,7 +21,7 @@ export const metadata: Metadata = {
   description: "The Hub for Every Dev Event You Mustn't Miss",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -30,7 +31,9 @@ export default function RootLayout({
       <body
         className={`${schibstedGrotesk.variable} ${martianMono.variable} min-h-screen antialiased`}
       >
-        <Navbar />
+        <Suspense>
+          <Navbar />
+        </Suspense>
         <div className="absolute inset-0 top-0 z-[-1] min-h-screen">
           <LightRays
             raysOrigin="top-center-offset"
@@ -45,7 +48,15 @@ export default function RootLayout({
           />
         </div>
         <main>{children}</main>
-        <Toaster />
+        <Toaster
+          toastOptions={{
+            style: {
+              borderRadius: "10px",
+              background: "black",
+              color: "#fff",
+            },
+          }}
+        />
       </body>
     </html>
   );

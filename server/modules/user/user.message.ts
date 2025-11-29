@@ -1,0 +1,16 @@
+export enum UserMessages {
+  EmailExists = "Email is Already Registered",
+  UsernameExists = "Username is Already Registered",
+  Register = "Account Created Successfully",
+  Login = "Successful Login",
+  NotFound = "User Not Found",
+  InvalidCredentials = "Email or Password is Invalid!",
+  NotSamePasswords = "Passwords are Not Equal!",
+  InvalidEmail = "Invalid Email",
+  UsernameRequired = "Username is Required",
+  PasswordRequired = "Password is Required",
+  RePasswordRequired = "RePassword is Required",
+  PasswordNotMatch = "Passwords don't Match",
+  UsernameMin = "Username should be atleast 3 characters",
+  UsernameMax = "Username must be under 30 characters",
+}

@@ -17,7 +17,6 @@ const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async redirect({ url, baseUrl }) {
-      console.log({ url, baseUrl });
       // After OAuth success → go to custom session setup route
       if (url === baseUrl) {
         return `${baseUrl}/api/auth/create-session`;

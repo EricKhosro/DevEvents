@@ -8,12 +8,14 @@ import { AuthTokenCookieName } from "@/shared/constants/cookie.constant";
 export const GET = async (req: NextRequest) => {
   const JWT_PRIVATE_KEY = process.env.JWT_PRIVATE_KEY!;
   try {
-    const token = await getToken({ req, secret: JWT_PRIVATE_KEY });
+    const token: any = await getToken({ req, secret: JWT_PRIVATE_KEY });
     if (!token?.email) {
       return NextResponse.redirect("/auth?error=NoEmail");
     }
 
-    const appToken = UserService.generateAppToken(token.email);
+    const user = await UserService.registerWithOAuth(token.email);
+
+    const appToken = UserService.generateAppToken(user.email, user.username);
     const cookieOptions = {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",

@@ -6,13 +6,24 @@ import createHttpError from "http-errors";
 import { NextRequest, NextResponse } from "next/server";
 import cookie from "cookie";
 import { AuthTokenCookieName } from "@/shared/constants/cookie.constant";
+import { LoginSchema } from "@/server/modules/user/user.zod";
 
 export const POST = async (req: NextRequest) => {
   try {
     const body = await req.json();
     if (!body) throw createHttpError.BadRequest(SharedMessages.BodyRequired);
-    const { email, password } = body;
-    const token = await UserService.login(email, password);
+    const parsedBody = LoginSchema.safeParse(body);
+    if (!parsedBody.success)
+      return NextResponse.json(
+        {
+          errors: parsedBody.error.issues.flat(),
+          message: UserMessages.InvalidCredentials,
+        },
+        { status: 400 }
+      );
+
+    const { username, password } = parsedBody.data;
+    const token = await UserService.login(username, password);
 
     const cookieOptions = {
       httpOnly: true,

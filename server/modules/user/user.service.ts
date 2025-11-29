@@ -1,5 +1,5 @@
 import createHttpError from "http-errors";
-import User, { UserSchema } from "./user.model";
+import User, { UserLean, UserSchema } from "./user.model";
 import { UserMessages } from "./user.message";
 import { hash, genSalt, compare } from "bcrypt";
 import { sign } from "jsonwebtoken";
@@ -18,10 +18,13 @@ export const UserService = {
     return token;
   },
 
-  async register(email: string, password: string, rePassword: string) {
-    const user = await this.findByEmail(email);
-    if (user && user._id)
-      throw createHttpError.Conflict(UserMessages.EmailExists);
+  async register(
+    email: string,
+    password: string,
+    rePassword: string,
+    username: string
+  ) {
+    await this.checkUnique(email, username);
 
     if (password !== rePassword)
       throw createHttpError.BadRequest(UserMessages.NotSamePasswords);
@@ -54,8 +57,28 @@ export const UserService = {
     return sign({ email: email }, PRIVATE_KEY);
   },
 
+  async checkUnique(email: string, username: string) {
+    const existing = await User.findOne({
+      $or: [{ email }, { username }],
+    }).lean<UserLean>();
+
+    if (!existing) return;
+
+    if (existing.email === email)
+      throw createHttpError.Conflict(UserMessages.EmailExists);
+
+    if (existing.username === username)
+      throw createHttpError.Conflict(UserMessages.UsernameExists);
+  },
+
   async findByEmail(email: string): Promise<UserSchema | null> {
     const user = await User.findOne({ email });
+    if (!user) return null;
+    return user;
+  },
+
+  async findByUsername(username: string): Promise<UserSchema | null> {
+    const user = await User.findOne({ username });
     if (!user) return null;
     return user;
   },

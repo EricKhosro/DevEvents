@@ -1,7 +1,9 @@
-import { IAuthDTO } from "@/shared/types/auth.types";
-import { Document, model, models, Schema } from "mongoose";
+import { IUser } from "@/shared/types/auth.types";
+import { Document, HydratedDocument, InferSchemaType, model, models, Schema } from "mongoose";
 
-export interface UserSchema extends Document, IAuthDTO {}
+export interface UserSchema extends Document, IUser {}
+export type UserLean = InferSchemaType<typeof UserSchema>; // for .lean()
+export type UserDoc = HydratedDocument<UserLean>; // for normal .find()
 
 const UserSchema = new Schema<UserSchema>({
   email: {
@@ -10,6 +12,19 @@ const UserSchema = new Schema<UserSchema>({
     trim: true,
     maxlength: [100, "email cannot exceed 100 characters"],
     index: true,
+  },
+  username: {
+    type: String,
+    required: [true, "username is required"],
+    trim: true,
+    maxlength: [100, "username cannot exceed 100 characters"],
+    index: true,
+  },
+  avatar: {
+    type: String,
+    required: false,
+    default: null,
+    trim: true,
   },
   password: {
     type: String,

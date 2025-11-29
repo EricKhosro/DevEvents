@@ -9,8 +9,13 @@ export const POST = async (req: NextRequest) => {
   try {
     const body = await req.json();
     if (!body) throw createHttpError.BadRequest(SharedMessages.BodyRequired);
-    const { email, password, rePassword } = body;
-    const user = await UserService.register(email, password, rePassword);
+    const { email, password, rePassword, username } = body;
+    const user = await UserService.register(
+      email,
+      password,
+      rePassword,
+      username
+    );
     return NextResponse.json(
       { message: UserMessages.Register, user },
       { status: 200 }

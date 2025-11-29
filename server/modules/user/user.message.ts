@@ -1,5 +1,6 @@
 export enum UserMessages {
   EmailExists = "Email is Already Registered",
+  UsernameExists = "Username is Already Registered",
   Register = "Account Created Successfully",
   Login = "Successful Login",
   NotFound = "Email Not Found",

@@ -1,7 +1,20 @@
-export interface IAuthDTO {
+export interface ILoginDTO {
   email: string;
   password: string;
+}
+
+export interface IRegisterDTO extends ILoginDTO {
+  email: string;
+  password: string;
+  username: string;
   rePassword: string;
+}
+
+export interface IUser {
+  email: string;
+  password: string;
+  username: string;
+  avatar: string | null;
 }
 
 export interface IMe {

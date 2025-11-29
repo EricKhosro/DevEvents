@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   description: "The Hub for Every Dev Event You Mustn't Miss",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -45,7 +45,15 @@ export default function RootLayout({
           />
         </div>
         <main>{children}</main>
-        <Toaster />
+        <Toaster
+          toastOptions={{
+            style: {
+              borderRadius: "10px",
+              background: "black",
+              color: "#fff",
+            },
+          }}
+        />
       </body>
     </html>
   );

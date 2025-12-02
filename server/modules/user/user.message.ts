@@ -13,4 +13,5 @@ export enum UserMessages {
   PasswordNotMatch = "Passwords don't Match",
   UsernameMin = "Username should be atleast 3 characters",
   UsernameMax = "Username must be under 30 characters",
+  Unauthorized = "User not Logged-in",
 }

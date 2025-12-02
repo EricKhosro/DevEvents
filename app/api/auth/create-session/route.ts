@@ -18,7 +18,7 @@ export const GET = async (req: NextRequest) => {
 
     const user = await UserService.registerWithOAuth(token.email);
 
-    const appToken = UserService.generateAppToken(user.email, user.username);
+    const appToken = UserService.generateAppToken(user);
 
     const cookieHeader = cookie.serialize(
       AuthTokenCookieName,

@@ -5,7 +5,10 @@ import { SharedMessages } from "@/shared/utils/shared.messages";
 import createHttpError from "http-errors";
 import { NextRequest, NextResponse } from "next/server";
 import cookie from "cookie";
-import { AuthTokenCookieName } from "@/shared/constants/cookie.constant";
+import {
+  AuthTokenCookieName,
+  CookieOptions,
+} from "@/shared/constants/cookie.constant";
 import { LoginSchema } from "@/server/modules/user/user.zod";
 
 export const POST = async (req: NextRequest) => {
@@ -25,17 +28,10 @@ export const POST = async (req: NextRequest) => {
     const { username, password } = parsedBody.data;
     const token = await UserService.login(username, password);
 
-    const cookieOptions = {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 60 * 60 * 24 * 7,
-      path: "/",
-    };
-
     const cookieHeader = cookie.serialize(
       AuthTokenCookieName,
       token,
-      cookieOptions
+      CookieOptions
     );
 
     return NextResponse.json(

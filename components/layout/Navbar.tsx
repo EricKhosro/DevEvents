@@ -1,12 +1,16 @@
 import { getUserInfo } from "@/server/modules/user/user.action";
-import { IMe } from "@/shared/types/auth.types";
 import Image from "next/image";
 import Link from "next/link";
 
 const Navbar = async () => {
-  const user: IMe | null = await getUserInfo();
+  let user;
+
+  try {
+    user = await getUserInfo();
+  } catch (error) {
+    console.log(error);
+  }
   return (
-    
     <header>
       <nav>
         <Link href="/" className="logo">

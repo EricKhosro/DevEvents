@@ -87,6 +87,12 @@ const EventSchema = new Schema<EventSchema>(
         message: "At least one tag is required",
       },
     },
+    createdBy: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      index: true,
+      required: true,
+    },
   },
   {
     timestamps: true, // Auto-generate createdAt and updatedAt

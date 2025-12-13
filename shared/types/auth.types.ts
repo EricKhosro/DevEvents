@@ -21,4 +21,5 @@ export interface IMe {
   email: string | null;
   username: string | null;
   avatar: string | null;
+  _id: string;
 }

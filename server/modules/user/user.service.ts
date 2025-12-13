@@ -13,7 +13,7 @@ export const UserService = {
     if (!validPassword)
       throw createHttpError.NotFound(UserMessages.InvalidCredentials);
 
-    const token = this.generateAppToken(user.email, user.username);
+    const token = this.generateAppToken(user);
 
     return token;
   },
@@ -48,14 +48,14 @@ export const UserService = {
     return newUser;
   },
 
-  generateAppToken(email: string, username: string) {
+  generateAppToken(user: UserSchema) {
     const PRIVATE_KEY = process.env.JWT_PRIVATE_KEY;
     if (!PRIVATE_KEY) {
       console.log("JWT Private Key not in .env");
       throw createHttpError.InternalServerError();
     }
-
-    return sign({ email, username }, PRIVATE_KEY);
+    const { email, username, _id } = user;
+    return sign({ email, username, _id }, PRIVATE_KEY);
   },
 
   async checkUnique(email: string, username: string) {

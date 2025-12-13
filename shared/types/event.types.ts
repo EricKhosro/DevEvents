@@ -1,4 +1,7 @@
+import { Types } from "mongoose";
+
 export interface IEvent {
+  createdBy: Types.ObjectId;
   title: string;
   slug: string;
   description: string;

@@ -38,7 +38,7 @@ export const EventService = {
   },
 
   async fetchEvents() {
-    const events = await Event.find({}).sort({ createdAt: -1 }).lean();
+    const events = await Event.find({}).sort({ createdAt: -1 }) ;
     if (!events || !events.length)
       throw new createHttpError.NotFound(EventMessages.NoEvents);
     return events;

@@ -3,8 +3,14 @@ import FormsWrapper from "./FormsWrapper";
 import { redirect } from "next/navigation";
 
 const AuthPage = async () => {
-  const user = await getUserInfo();
-  if (user) redirect("/");
+  let user;
+
+  try {
+    user = await getUserInfo();
+    if (user) redirect("/");
+  } catch (error) {
+    console.log(error);
+  }
 
   return <FormsWrapper />;
 };

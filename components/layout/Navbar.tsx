@@ -1,15 +1,9 @@
-import { getUserInfo } from "@/server/modules/user/user.action";
+import { getSafeUserInfo } from "@/server/modules/user/user.action";
 import Image from "next/image";
 import Link from "next/link";
 
 const Navbar = async () => {
-  let user;
-
-  try {
-    user = await getUserInfo();
-  } catch (error) {
-    console.log(error);
-  }
+  const user = await getSafeUserInfo();
   return (
     <header>
       <nav>

@@ -8,9 +8,18 @@ interface IProps {
   location: string;
   date: string;
   time: string;
+  createdBy: { username: string };
 }
 
-const EventCard = ({ image, title, date, location, slug, time }: IProps) => {
+const EventCard = ({
+  image,
+  title,
+  date,
+  location,
+  slug,
+  time,
+  createdBy,
+}: IProps) => {
   return (
     <Link href={`/events/${slug}`} id="event-card">
       <Image
@@ -37,6 +46,9 @@ const EventCard = ({ image, title, date, location, slug, time }: IProps) => {
           <Image src="/icons/clock.svg" alt="time" width={14} height={14} />
           <p>{time}</p>
         </div>
+      </div>
+      <div className="text-xs text-light-200 ml-auto">
+        Created by {createdBy?.username}
       </div>
     </Link>
   );

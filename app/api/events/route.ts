@@ -3,10 +3,12 @@ import connectDB from "@/server/db/mongodb";
 import { NextRequest, NextResponse } from "next/server";
 import { revalidateTag } from "next/cache";
 import { EventService } from "@/server/modules/event/event.service";
+import { getUserInfo } from "@/server/modules/user/user.action";
 
 export async function POST(req: NextRequest) {
   try {
     await connectDB();
+    const userInfo = await getUserInfo();
 
     const formData = await req.formData();
     let event;
@@ -36,7 +38,8 @@ export async function POST(req: NextRequest) {
       event,
       file,
       tags,
-      agenda
+      agenda,
+      userInfo._id
     );
 
     // Revalidate the cache (assuming you're caching event list)
@@ -63,7 +66,10 @@ export async function GET() {
     await connectDB();
 
     try {
-      const events = await Event.find({}).sort({ createdAt: -1 }).lean();
+      const events = await Event.find({})
+        .populate("createdBy", "username")
+        .sort({ createdAt: -1 })
+        .lean();
       return NextResponse.json(events, { status: 200 });
     } catch (error) {
       console.error(error);

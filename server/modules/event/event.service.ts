@@ -1,11 +1,16 @@
 import Event from "./event.model";
 import { v2 as cloudinary } from "cloudinary";
 import createHttpError from "http-errors";
-import { getUserInfo } from "../user/user.action";
 import { EventMessages } from "./event.messages";
 
 export const EventService = {
-  async createEvent(eventDTO: any, file: File, tags: string, agenda: string) {
+  async createEvent(
+    eventDTO: any,
+    file: File,
+    tags: string,
+    agenda: string,
+    userId: string
+  ) {
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
@@ -26,19 +31,20 @@ export const EventService = {
 
     const parsedTags = tags.split(",");
     const parsedAgenda = agenda.split(",");
-    const user = await getUserInfo();
     const createdEvent = await Event.create({
       ...eventDTO,
       tags: parsedTags,
       agenda: parsedAgenda,
-      createdBy: user._id,
+      createdBy: userId,
     });
 
     return createdEvent;
   },
 
   async fetchEvents() {
-    const events = await Event.find({}).sort({ createdAt: -1 }) ;
+    const events = await Event.find({})
+      .sort({ createdAt: -1 })
+      .projection({ __v: -1 });
     if (!events || !events.length)
       throw new createHttpError.NotFound(EventMessages.NoEvents);
     return events;

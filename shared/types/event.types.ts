@@ -1,7 +1,7 @@
 import { Types } from "mongoose";
 
 export interface IEvent {
-  createdBy: Types.ObjectId;
+  createdBy: { _id: Types.ObjectId; username: string };
   title: string;
   slug: string;
   description: string;

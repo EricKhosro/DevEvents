@@ -1,21 +1,24 @@
 import createHttpError from "http-errors";
-import User, { UserLean, UserSchema } from "./user.model";
-import { UserMessages } from "./user.message";
 import { hash, genSalt, compare } from "bcrypt";
 import { sign } from "jsonwebtoken";
+import { UserMessages } from "./user.message";
+import { UserRepository } from "./user.repository";
+import { UserSchema } from "./user.model";
 
 export const UserService = {
   async login(username: string, password: string) {
-    const user = await this.findByUsername(username);
-    if (!user) throw createHttpError.NotFound(UserMessages.NotFound);
+    const user = await UserRepository.findByUsername(username);
+
+    if (!user) {
+      throw createHttpError.NotFound(UserMessages.NotFound);
+    }
 
     const validPassword = await compare(password, user.password);
-    if (!validPassword)
+    if (!validPassword) {
       throw createHttpError.NotFound(UserMessages.InvalidCredentials);
+    }
 
-    const token = this.generateAppToken(user);
-
-    return token;
+    return this.generateAppToken(user);
   },
 
   async register(
@@ -26,61 +29,56 @@ export const UserService = {
   ) {
     await this.checkUnique(email, username);
 
-    if (password !== rePassword)
+    if (password !== rePassword) {
       throw createHttpError.BadRequest(UserMessages.NotSamePasswords);
+    }
 
-    const salt = await genSalt(10);
-    const hashedPassword = await hash(password, salt);
+    const hashedPassword = await hash(password, await genSalt(10));
 
-    const newUser = await User.create({
-      username,
+    const newUser = await UserRepository.create({
       email,
+      username,
       password: hashedPassword,
     });
+
     return newUser.email;
   },
 
   async registerWithOAuth(email: string): Promise<UserSchema> {
-    const existingUser = await this.findByEmail(email);
+    const existingUser = await UserRepository.findByEmail(email);
     if (existingUser) return existingUser;
 
-    const newUser = await User.create({ email, password: "" });
-    return newUser;
+    return UserRepository.create({ email, password: "" });
   },
 
   generateAppToken(user: UserSchema) {
     const PRIVATE_KEY = process.env.JWT_PRIVATE_KEY;
     if (!PRIVATE_KEY) {
-      console.log("JWT Private Key not in .env");
       throw createHttpError.InternalServerError();
     }
+
     const { email, username, _id, role, avatar } = user;
-    return sign({ email, username, _id, role, avatar }, PRIVATE_KEY);
+
+    return sign(
+      { email, username, _id, role, avatar },
+      PRIVATE_KEY
+    );
   },
 
   async checkUnique(email: string, username: string) {
-    const existing = await User.findOne({
-      $or: [{ email }, { username }],
-    }).lean<UserLean>();
+    const existing = await UserRepository.findForUniqueness(
+      email,
+      username
+    );
 
     if (!existing) return;
 
-    if (existing.email === email)
+    if (existing.email === email) {
       throw createHttpError.Conflict(UserMessages.EmailExists);
+    }
 
-    if (existing.username === username)
+    if (existing.username === username) {
       throw createHttpError.Conflict(UserMessages.UsernameExists);
-  },
-
-  async findByEmail(email: string): Promise<UserSchema | null> {
-    const user = await User.findOne({ email });
-    if (!user) return null;
-    return user;
-  },
-
-  async findByUsername(username: string): Promise<UserSchema | null> {
-    const user = await User.findOne({ username });
-    if (!user) return null;
-    return user;
+    }
   },
 };

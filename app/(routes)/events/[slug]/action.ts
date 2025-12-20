@@ -15,6 +15,7 @@ export const getSimilarEventsBySlug = async (
     return await Event.find({
       _id: { $ne: event._id },
       tags: { $in: event.tags },
+      approved: true,
     }).lean<IEvent[]>();
   } catch {
     return [] as IEvent[];

@@ -5,6 +5,7 @@ import LightRays from "@/components/LightRays";
 import Navbar from "@/components/layout/Navbar";
 import { Toaster } from "react-hot-toast";
 import { Suspense } from "react";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 const schibstedGrotesk = Schibsted_Grotesk({
   variable: "--font-schibsted-grotesk",
@@ -31,32 +32,34 @@ export default async function RootLayout({
       <body
         className={`${schibstedGrotesk.variable} ${martianMono.variable} min-h-screen antialiased`}
       >
-        <Suspense>
-          <Navbar />
-        </Suspense>
-        <div className="absolute inset-0 top-0 z-[-1] min-h-screen">
-          <LightRays
-            raysOrigin="top-center-offset"
-            raysColor="#5dfeca"
-            raysSpeed={0.5}
-            lightSpread={0.9}
-            rayLength={1.4}
-            followMouse={true}
-            mouseInfluence={0.1}
-            noiseAmount={0}
-            distortion={0.01}
+        <NuqsAdapter>
+          <Suspense>
+            <Navbar />
+          </Suspense>
+          <div className="absolute inset-0 top-0 z-[-1] min-h-screen">
+            <LightRays
+              raysOrigin="top-center-offset"
+              raysColor="#5dfeca"
+              raysSpeed={0.5}
+              lightSpread={0.9}
+              rayLength={1.4}
+              followMouse={true}
+              mouseInfluence={0.1}
+              noiseAmount={0}
+              distortion={0.01}
+            />
+          </div>
+          <main>{children}</main>
+          <Toaster
+            toastOptions={{
+              style: {
+                borderRadius: "10px",
+                background: "black",
+                color: "#fff",
+              },
+            }}
           />
-        </div>
-        <main>{children}</main>
-        <Toaster
-          toastOptions={{
-            style: {
-              borderRadius: "10px",
-              background: "black",
-              color: "#fff",
-            },
-          }}
-        />
+        </NuqsAdapter>
       </body>
     </html>
   );

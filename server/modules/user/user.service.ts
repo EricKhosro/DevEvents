@@ -54,8 +54,8 @@ export const UserService = {
       console.log("JWT Private Key not in .env");
       throw createHttpError.InternalServerError();
     }
-    const { email, username, _id } = user;
-    return sign({ email, username, _id }, PRIVATE_KEY);
+    const { email, username, _id, role, avatar } = user;
+    return sign({ email, username, _id, role, avatar }, PRIVATE_KEY);
   },
 
   async checkUnique(email: string, username: string) {

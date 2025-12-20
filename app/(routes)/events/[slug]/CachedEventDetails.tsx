@@ -3,6 +3,7 @@ import { BaseUrl } from "@/shared/utils/env.utils";
 import { cacheLife, cacheTag } from "next/cache";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { ApproveEventButton } from "./ApproveEventButton";
 
 const EventDetailItem = ({
   icon,
@@ -40,15 +41,19 @@ const EventTags = ({ tags }: { tags: string[] }) => (
   </div>
 );
 
+interface CachedEventDetailsProps {
+  params: Promise<{ slug: string }>;
+  canApprove: boolean;
+}
+
 const CachedEventDetails = async ({
   params,
-}: {
-  params: Promise<{ slug: string }>;
-}) => {
-  "use cache";
-  cacheLife("hours");
+  canApprove,
+}: CachedEventDetailsProps) => {
+  // "use cache";
+  // cacheLife("hours");
   const { slug } = await params;
-  cacheTag(slug);
+  // cacheTag(slug);
   let event = {} as IEvent;
   try {
     const response = await fetch(`${BaseUrl}/api/events/${slug}`);
@@ -87,7 +92,10 @@ const CachedEventDetails = async ({
   return (
     <>
       <div className="header">
-        <h1>Event Description</h1>
+        <div className="flex items-center justify-between gap-4">
+          <h1>Event Description</h1>
+          {canApprove && <ApproveEventButton slug={event.slug} />}
+        </div>
         <p>{description}</p>
       </div>
       <div className="details">

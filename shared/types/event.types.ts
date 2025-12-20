@@ -1,7 +1,6 @@
 import { Types } from "mongoose";
 
 export interface IEvent {
-  createdBy: { _id: Types.ObjectId; username: string };
   title: string;
   slug: string;
   description: string;
@@ -18,4 +17,6 @@ export interface IEvent {
   tags: string[];
   createdAt: Date;
   updatedAt: Date;
+  createdBy: { _id: Types.ObjectId; username: string };
+  approved: boolean;
 }

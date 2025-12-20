@@ -93,6 +93,11 @@ const EventSchema = new Schema<EventSchema>(
       index: true,
       required: true,
     },
+    approved: {
+      type: Boolean,
+      default: false,
+      index: true,
+    },
   },
   {
     timestamps: true, // Auto-generate createdAt and updatedAt

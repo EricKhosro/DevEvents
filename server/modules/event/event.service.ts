@@ -1,7 +1,8 @@
-import Event from "./event.model";
+import Event, { EventSchema } from "./event.model";
 import { v2 as cloudinary } from "cloudinary";
 import createHttpError from "http-errors";
 import { EventMessages } from "./event.messages";
+import { IEvent } from "@/shared/types/event.types";
 
 export const EventService = {
   async createEvent(
@@ -41,18 +42,26 @@ export const EventService = {
     return createdEvent;
   },
 
-  async fetchEvents() {
-    const events = await Event.find({})
+  async fetchEvents(filter: Record<string, unknown> = {}): Promise<IEvent[]> {
+    console.log({ filter });
+    const events = await Event.find(filter)
+      .populate("createdBy", "username")
       .sort({ createdAt: -1 })
-      .projection({ __v: -1 });
-    if (!events || !events.length)
-      throw new createHttpError.NotFound(EventMessages.NoEvents);
+      .lean<IEvent[]>();
     return events;
   },
 
-  async fetchEventBySlug(slug: string) {
+  async fetchEventBySlug(
+    slug: string,
+    includeUnapproved = false
+  ): Promise<IEvent> {
     const sanitizedSlug = slug.trim().toLowerCase();
-    const event = await Event.findOne({ slug: sanitizedSlug }).lean();
+    const query: Record<string, unknown> = { slug: sanitizedSlug };
+    if (!includeUnapproved) {
+      query.approved = true;
+    }
+
+    const event = await Event.findOne(query).lean<IEvent>();
 
     if (!event) {
       throw new createHttpError.NotFound(EventMessages.NotFound);

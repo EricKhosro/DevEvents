@@ -1,9 +1,12 @@
-import Event from "@/server/modules/event/event.model";
 import connectDB from "@/server/db/mongodb";
 import { NextRequest, NextResponse } from "next/server";
 import { revalidateTag } from "next/cache";
 import { EventService } from "@/server/modules/event/event.service";
-import { getUserInfo } from "@/server/modules/user/user.action";
+import {
+  getUserInfo,
+  getSafeUserInfo,
+} from "@/server/modules/user/user.action";
+import { Role } from "@/shared/constants/role.constant";
 
 export async function POST(req: NextRequest) {
   try {
@@ -39,7 +42,7 @@ export async function POST(req: NextRequest) {
       file,
       tags,
       agenda,
-      userInfo._id
+      (userInfo as any)._id
     );
 
     // Revalidate the cache (assuming you're caching event list)
@@ -61,15 +64,27 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
     await connectDB();
 
     try {
-      const events = await Event.find({})
-        .populate("createdBy", "username")
-        .sort({ createdAt: -1 })
-        .lean();
+      const url = new URL(req.url);
+      const pendingParam = url.searchParams.get("pending");
+      const user = await getSafeUserInfo();
+      const isAdmin = !!user && user.role === Role.Admin;
+      const filter: Record<string, unknown> = {};
+      if (isAdmin) {
+        // Admins see all events by default; with ?pending=true they see only not-approved ones
+        if (pendingParam === "true") {
+          filter.approved = false;
+        }
+      } else {
+        // Non-admins can only see approved events
+        filter.approved = true;
+      }
+
+      const events = await EventService.fetchEvents(filter);
       return NextResponse.json(events, { status: 200 });
     } catch (error) {
       console.error(error);

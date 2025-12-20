@@ -1,7 +1,17 @@
+import { Role } from "@/shared/constants/role.constant";
 import { IUser } from "@/shared/types/auth.types";
-import { Document, HydratedDocument, InferSchemaType, model, models, Schema } from "mongoose";
+import {
+  Document,
+  HydratedDocument,
+  InferSchemaType,
+  model,
+  models,
+  Schema,
+} from "mongoose";
 
-export interface UserSchema extends Document, IUser {}
+export interface UserSchema extends Document, IUser {
+  password: string;
+}
 export type UserLean = InferSchemaType<typeof UserSchema>; // for .lean()
 export type UserDoc = HydratedDocument<UserLean>; // for normal .find()
 
@@ -30,6 +40,11 @@ const UserSchema = new Schema<UserSchema>({
     type: String,
     trim: true,
     maxlength: [100, "password cannot exceed 100 characters"],
+  },
+  role: {
+    type: String,
+    enum: [Role.User, Role.Admin],
+    default: Role.User,
   },
 });
 

@@ -14,4 +14,5 @@ export enum UserMessages {
   UsernameMin = "Username should be atleast 3 characters",
   UsernameMax = "Username must be under 30 characters",
   Unauthorized = "User not Logged-in",
+  Forbidden = "Forbidden",
 }

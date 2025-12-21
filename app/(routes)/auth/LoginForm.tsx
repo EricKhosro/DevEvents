@@ -41,6 +41,7 @@ const LoginForm = () => {
       })
       .then(() => {
         router.push("/");
+        router.refresh();
       })
       .finally(() => {
         setLoading(false);

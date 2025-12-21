@@ -1,8 +1,7 @@
-import { IEvent } from "@/shared/types/event.types";
-import { BaseUrl } from "@/shared/utils/env.utils";
-import { cacheLife, cacheTag } from "next/cache";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { ApproveEventButton } from "./ApproveEventButton";
+import { GetEventDetails } from "@/server/modules/event/event.action";
 
 const EventDetailItem = ({
   icon,
@@ -40,35 +39,17 @@ const EventTags = ({ tags }: { tags: string[] }) => (
   </div>
 );
 
-const CachedEventDetails = async ({
-  params,
-}: {
+interface EventDetailsProps {
   params: Promise<{ slug: string }>;
-}) => {
-  "use cache";
-  cacheLife("hours");
+  canApprove: boolean;
+}
+
+const EventDetails = async ({ params, canApprove }: EventDetailsProps) => {
   const { slug } = await params;
-  cacheTag(slug);
-  let event = {} as IEvent;
-  try {
-    const response = await fetch(`${BaseUrl}/api/events/${slug}`);
-    if (!response.ok) {
-      if (response.status === 404) {
-        notFound();
-      }
-      throw new Error(`Failed to fetch event: ${response.statusText}`);
-    }
-
-    event = await response.json();
-
-    if (!event.title) {
-      notFound();
-    }
-  } catch (error) {
-    console.error("Error fetching event:", error);
-    notFound();
-  }
+  const { data, error } = await GetEventDetails(slug);
+  console.log({ data });
   const bookings = 10;
+  if (error || !data) notFound();
 
   const {
     description,
@@ -82,12 +63,15 @@ const CachedEventDetails = async ({
     audience,
     tags,
     organizer,
-  } = event;
+  } = data;
 
   return (
     <>
       <div className="header">
-        <h1>Event Description</h1>
+        <div className="flex items-center justify-between gap-4">
+          <h1>Event Description</h1>
+          {canApprove && !data.approved && <ApproveEventButton slug={data.slug} />}
+        </div>
         <p>{description}</p>
       </div>
       <div className="details">
@@ -148,4 +132,4 @@ const CachedEventDetails = async ({
   );
 };
 
-export default CachedEventDetails;
+export default EventDetails;

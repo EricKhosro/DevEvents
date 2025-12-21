@@ -18,18 +18,16 @@ const ExploreBtn = () => {
     <button
       type="button"
       id="explore-btn"
-      className="mt-7 mx-auto"
+      className="mt-7 mx-auto text-center flex flex-row justify-center items-center"
       onClick={scrollToSection}
     >
-      <>
-        Explore Events
-        <Image
-          src="/icons/arrow-down.svg"
-          alt="arrow-down"
-          width={24}
-          height={24}
-        />
-      </>
+      Explore Events
+      <Image
+        src="/icons/arrow-down.svg"
+        alt="arrow-down"
+        width={24}
+        height={24}
+      />
     </button>
   );
 };

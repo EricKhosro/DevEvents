@@ -37,23 +37,23 @@ export const getUserInfo = async (): Promise<IUser & { _id: string }> => {
   return { _id: (_id as any).toString(), email, avatar, username, role };
 };
 
-export async function requireAuth(): Promise<IUser> {
+export async function requireAuth(redirectURL?: string): Promise<IUser> {
   const token = (await cookies()).get(AuthTokenCookieName)?.value;
-
+  const destination = redirectURL ? `/auth?redirect=${redirectURL}` : "/auth";
   if (!token) {
-    redirect("/auth");
+    redirect(destination);
   }
 
   const decoded = verify(token, JWT_PRIVATE_KEY) as IUser | null;
 
   if (!decoded?.email) {
-    redirect("/auth");
+    redirect(destination);
   }
 
   const user = await UserService.findByEmail(decoded.email);
 
   if (!user) {
-    redirect("/auth");
+    redirect(destination);
   }
 
   return {

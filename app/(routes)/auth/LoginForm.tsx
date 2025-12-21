@@ -4,7 +4,8 @@ import Button from "@/components/base/Button";
 import TextInput from "@/components/base/TextInput";
 import { ILoginDTO } from "@/shared/types/auth.types";
 import { BaseUrl } from "@/shared/utils/env.utils";
-import { useRouter } from "next/navigation";
+import { sanitizeRedirectUrl } from "@/shared/utils/redirect.utils";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
@@ -12,6 +13,7 @@ const LoginForm = () => {
   const [formValues, setFormValues] = useState({} as ILoginDTO);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const searchParam = useSearchParams();
 
   const changeHandler = (name: string, value: any) => {
     setFormValues({ ...formValues, [name]: value });
@@ -31,8 +33,10 @@ const LoginForm = () => {
     return data;
   };
 
+  console.log(sanitizeRedirectUrl("/events/create"));
   const submitHandler = async () => {
     setLoading(true);
+    const redirectURL = searchParam.get("redirect") || "/";
     toast
       .promise(authRequest, {
         loading: "Logging-in...",
@@ -40,7 +44,7 @@ const LoginForm = () => {
         error: ({ message }: { message: string }) => <b>{message}</b>,
       })
       .then(() => {
-        router.push("/");
+        router.push(sanitizeRedirectUrl(redirectURL));
         router.refresh();
       })
       .finally(() => {

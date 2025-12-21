@@ -1,4 +1,5 @@
 import { Types } from "mongoose";
+import { IBaseResponse } from "./common.types";
 
 export interface IEvent {
   title: string;

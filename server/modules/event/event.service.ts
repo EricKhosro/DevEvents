@@ -2,6 +2,9 @@ import { v2 as cloudinary } from "cloudinary";
 import createHttpError from "http-errors";
 import { EventMessages } from "./event.messages";
 import { EventRepository } from "./event.repository";
+import { getSafeUserInfo } from "../user/user.action";
+import { Role } from "@/shared/constants/role.constant";
+import { IEvent } from "@/shared/types/event.types";
 
 export const EventService = {
   async createEvent(
@@ -42,17 +45,35 @@ export const EventService = {
     return EventRepository.findMany(filter);
   },
 
-  async fetchEventBySlug(slug: string, includeUnapproved = false) {
-    const sanitizedSlug = slug.trim().toLowerCase();
-
+  async fetchEventBySlug(slug: string): Promise<IEvent | null> {
+    const sanitizedSlug = this.sanitizeSlug(slug);
+    const user = await getSafeUserInfo();
+    const includeUnapproved = user && user.role === Role.Admin ? true : false;
     const event = await EventRepository.findBySlug(sanitizedSlug, {
       includeUnapproved,
     });
-
-    if (!event) {
-      throw new createHttpError.NotFound(EventMessages.NotFound);
-    }
+    if (!event) return null;
 
     return event;
+  },
+
+  async fetchSimilarEventsBySlug(slug: string, options?: { limit: number }) {
+    const sanitizedSlug = this.sanitizeSlug(slug);
+    const event = await EventRepository.findBySlug(sanitizedSlug);
+    const user = await getSafeUserInfo();
+    const isAdmin = user && user.role === Role.Admin ? true : false;
+
+    return await EventRepository.findSimilarEventsBySlug(
+      sanitizedSlug,
+      event?.tags,
+      {
+        limit: options?.limit || 5,
+        includeUnapproved: isAdmin,
+      }
+    );
+  },
+
+  sanitizeSlug(slug: string) {
+    return slug.trim().toLowerCase();
   },
 };

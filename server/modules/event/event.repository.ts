@@ -28,4 +28,20 @@ export const EventRepository = {
 
     return Event.findOne(query).lean<IEvent | null>();
   },
+
+  async findSimilarEventsBySlug(
+    excludedSlug: string,
+    wantedTags?: string[],
+    options?: { includeUnapproved?: boolean; limit: number }
+  ) {
+    await connectDB();
+    const query: any = { slug: { $ne: excludedSlug } };
+    if (wantedTags && wantedTags.length) query.tags = { $in: wantedTags };
+    if (!options || !options.includeUnapproved) query.approved = 1;
+
+    return Event.find(query)
+      .sort({ createdAt: -1 })
+      .limit(options?.limit || 5)
+      .lean<IEvent[]>();
+  },
 };

@@ -15,7 +15,6 @@ const JWT_PRIVATE_KEY = process.env.JWT_PRIVATE_KEY!;
 export const getUserInfo = async (): Promise<IUser & { _id: string }> => {
   const cookiesInstance = await cookies();
   const authToken = cookiesInstance.get(AuthTokenCookieName)?.value.toString();
-  console.log({ authToken });
   if (!authToken) throw new AuthError(UserMessages.Unauthorized, 401);
 
   let decodedToken: JwtPayload;

@@ -9,6 +9,7 @@ interface IProps {
   date: string;
   time: string;
   createdBy: { username: string };
+  approved: boolean;
 }
 
 const EventCard = ({
@@ -19,9 +20,17 @@ const EventCard = ({
   slug,
   time,
   createdBy,
+  approved = false,
 }: IProps) => {
   return (
-    <Link href={`/events/${slug}`} id="event-card">
+    <Link href={`/events/${slug}`} id="event-card" className="relative">
+      {!approved ? (
+        <div className="absolute rotate-45 border-2 border-primary rounded-xl px-2 top-5 -right-5 bg-black">
+          Not Approved
+        </div>
+      ) : (
+        <></>
+      )}
       <Image
         src={image}
         alt={title}

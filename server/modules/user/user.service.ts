@@ -59,17 +59,11 @@ export const UserService = {
 
     const { email, username, _id, role, avatar } = user;
 
-    return sign(
-      { email, username, _id, role, avatar },
-      PRIVATE_KEY
-    );
+    return sign({ email, username, _id, role, avatar }, PRIVATE_KEY);
   },
 
   async checkUnique(email: string, username: string) {
-    const existing = await UserRepository.findForUniqueness(
-      email,
-      username
-    );
+    const existing = await UserRepository.findForUniqueness(email, username);
 
     if (!existing) return;
 
@@ -80,5 +74,13 @@ export const UserService = {
     if (existing.username === username) {
       throw createHttpError.Conflict(UserMessages.UsernameExists);
     }
+  },
+
+  async findByEmail(email: string) {
+    return UserRepository.findByEmail(email);
+  },
+
+  async findByUsername(username: string) {
+    return UserRepository.findByUsername(username);
   },
 };

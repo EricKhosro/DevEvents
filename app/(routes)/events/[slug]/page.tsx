@@ -1,4 +1,4 @@
-import CachedEventDetails from "./CachedEventDetails";
+import CachedEventDetails from "./EventDetails";
 import SimilarEvents from "./SimilarEvents";
 import { getSafeUserInfo } from "@/server/modules/user/user.action";
 import { Role } from "@/shared/constants/role.constant";

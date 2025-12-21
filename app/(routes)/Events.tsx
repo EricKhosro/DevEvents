@@ -3,14 +3,12 @@ import { IEvent } from "@/shared/types/event.types";
 import { EventService } from "@/server/modules/event/event.service";
 import { getSafeUserInfo } from "@/server/modules/user/user.action";
 import { Role } from "@/shared/constants/role.constant";
-import connectDB from "@/server/db/mongodb";
 
 interface EventsProps {
   pendingOnly?: boolean;
 }
 
 const Events = async ({ pendingOnly }: EventsProps) => {
-  await connectDB();
   const user = await getSafeUserInfo();
   const isAdmin = !!user && user.role === Role.Admin;
   const filter: Record<string, unknown> = {};

@@ -8,7 +8,7 @@ import { UserService } from "./user.service";
 import { UserMessages } from "./user.message";
 import { AuthError } from "./user.errors";
 import { redirect } from "next/navigation";
-import { Role } from "@/shared/constants/role.constant";
+import { Role } from "@/shared/constants/constant";
 
 const JWT_PRIVATE_KEY = process.env.JWT_PRIVATE_KEY!;
 

@@ -1,9 +1,7 @@
 import { v2 as cloudinary } from "cloudinary";
-import createHttpError from "http-errors";
-import { EventMessages } from "./event.messages";
 import { EventRepository } from "./event.repository";
 import { getSafeUserInfo } from "../user/user.action";
-import { Role } from "@/shared/constants/role.constant";
+import { Role } from "@/shared/constants/constant";
 import { IEvent } from "@/shared/types/event.types";
 
 export const EventService = {
@@ -28,7 +26,6 @@ export const EventService = {
         .end(buffer);
     });
 
-    // 2️⃣ Prepare data
     const eventData = {
       ...eventDTO,
       image: uploadResult.secure_url,
@@ -37,7 +34,6 @@ export const EventService = {
       createdBy: userId,
     };
 
-    // 3️⃣ Persist
     return EventRepository.create(eventData);
   },
 

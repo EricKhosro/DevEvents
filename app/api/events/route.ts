@@ -1,4 +1,3 @@
-import connectDB from "@/server/db/mongodb";
 import { NextRequest, NextResponse } from "next/server";
 import { revalidateTag } from "next/cache";
 import { EventService } from "@/server/modules/event/event.service";
@@ -6,46 +5,49 @@ import {
   getUserInfo,
   getSafeUserInfo,
 } from "@/server/modules/user/user.action";
-import { Role } from "@/shared/constants/role.constant";
+import { Role } from "@/shared/constants/constant";
+import { CreateEventSchema } from "@/server/modules/event/event.zod";
 
 export async function POST(req: NextRequest) {
   try {
-    await connectDB();
     const userInfo = await getUserInfo();
+    if (!userInfo) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
 
     const formData = await req.formData();
-    let event;
-    try {
-      // Validation could be added here (e.g., with Zod or Joi)
-      event = Object.fromEntries(formData.entries());
-    } catch (error) {
+    const rawData = Object.fromEntries(formData.entries());
+
+    // ✅ Zod validation
+    const parsed = CreateEventSchema.safeParse(rawData);
+    if (!parsed.success) {
       return NextResponse.json(
-        { message: "Invalid JSON Format" },
+        {
+          message: "Validation error",
+          errors: parsed.error.flatten().fieldErrors,
+        },
         { status: 400 }
       );
     }
 
-    const file = formData.get("image") as File;
-    if (!file) {
+    const file = formData.get("image");
+    if (!(file instanceof File)) {
       return NextResponse.json(
         { message: "Image is required" },
         { status: 400 }
       );
     }
 
-    const tags = formData.get("tags") as string;
-    const agenda = formData.get("agenda") as string;
+    const { tags, agenda, ...eventData } = parsed.data;
 
-    // Call service to create the event
     const createdEvent = await EventService.createEvent(
-      event,
+      eventData,
       file,
       tags,
       agenda,
       (userInfo as any)._id
     );
 
-    // Revalidate the cache (assuming you're caching event list)
     revalidateTag("events", { expire: 0 });
 
     return NextResponse.json(
@@ -53,7 +55,8 @@ export async function POST(req: NextRequest) {
       { status: 201 }
     );
   } catch (error) {
-    console.error(error);
+    console.error("Create event failed:", error);
+
     return NextResponse.json(
       {
         message:
@@ -66,8 +69,6 @@ export async function POST(req: NextRequest) {
 
 export async function GET(req: NextRequest) {
   try {
-    await connectDB();
-
     try {
       const url = new URL(req.url);
       const pendingParam = url.searchParams.get("pending");

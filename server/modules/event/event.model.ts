@@ -1,3 +1,4 @@
+import { EventMode } from "@/shared/constants/constant";
 import { IEvent } from "@/shared/types/event.types";
 import { Schema, model, models, Document } from "mongoose";
 
@@ -57,7 +58,7 @@ const EventSchema = new Schema<EventSchema>(
       type: String,
       required: [true, "Mode is required"],
       enum: {
-        values: ["online", "offline", "hybrid"],
+        values: [EventMode.Hybrid, EventMode.Offline, EventMode.Online],
         message: "Mode must be either online, offline, or hybrid",
       },
     },

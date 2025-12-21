@@ -1,4 +1,4 @@
-import { Role } from "../constants/role.constant";
+import { Role } from "../constants/constant";
 
 export interface ILoginDTO {
   username: string;

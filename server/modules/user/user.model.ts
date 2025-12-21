@@ -1,4 +1,4 @@
-import { Role } from "@/shared/constants/role.constant";
+import { Role } from "@/shared/constants/constant";
 import { IUser } from "@/shared/types/auth.types";
 import {
   Document,

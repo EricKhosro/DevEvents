@@ -2,7 +2,7 @@ import ExploreBtn from "@/components/ExploreBtn";
 import Link from "next/link";
 import CachedEvents from "./Events";
 import { getSafeUserInfo } from "@/server/modules/user/user.action";
-import { Role } from "@/shared/constants/role.constant";
+import { Role } from "@/shared/constants/constant";
 import { AdminPendingFilterToggle } from "@/components/events/AdminPendingFilterToggle";
 
 interface PageProps {

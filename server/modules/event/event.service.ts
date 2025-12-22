@@ -3,6 +3,9 @@ import { EventRepository } from "./event.repository";
 import { getSafeUserInfo } from "../user/user.action";
 import { Role } from "@/shared/constants/constant";
 import { IEvent } from "@/shared/types/event.types";
+import { IUser } from "@/shared/types/auth.types";
+import { Types } from "mongoose";
+import { EventSchema } from "./event.model";
 
 export const EventService = {
   async createEvent(
@@ -10,7 +13,7 @@ export const EventService = {
     file: File,
     tags: string,
     agenda: string,
-    userId: string
+    user: IUser
   ) {
     const buffer = Buffer.from(await file.arrayBuffer());
 
@@ -31,7 +34,8 @@ export const EventService = {
       image: uploadResult.secure_url,
       tags: tags.split(","),
       agenda: agenda.split(","),
-      createdBy: userId,
+      createdBy: user._id,
+      approved: user.role === Role.Admin ? true : false,
     };
 
     return EventRepository.create(eventData);
@@ -41,16 +45,33 @@ export const EventService = {
     return EventRepository.findMany(filter);
   },
 
-  async fetchEventBySlug(slug: string): Promise<IEvent | null> {
-    const sanitizedSlug = this.sanitizeSlug(slug);
-    const user = await getSafeUserInfo();
-    const includeUnapproved = user && user.role === Role.Admin ? true : false;
-    const event = await EventRepository.findBySlug(sanitizedSlug, {
-      includeUnapproved,
-    });
-    if (!event) return null;
+  async fetchVisibleEvents(user: (IUser & { _id: Types.ObjectId }) | null) {
+    let filter: any = {};
+    if (!user) filter = { approved: true };
+    else if (user && user.role === Role.Admin) filter = {};
+    else
+      filter = {
+        $or: [{ approved: true }, { createdBy: user._id }],
+      };
 
-    return event;
+    return this.fetchEvents(filter);
+  },
+
+  async fetchEventBySlug(slug: string): Promise<EventSchema | null> {
+    const sanitizedSlug = this.sanitizeSlug(slug);
+    const event = await EventRepository.findBySlug(sanitizedSlug);
+    if (!event) return null;
+    if (event.approved) return event;
+
+    const user = await getSafeUserInfo();
+    if (!user) return null;
+    if (
+      user.role === Role.Admin ||
+      user._id.toString() === event.createdBy.toString()
+    )
+      return event;
+
+    return null;
   },
 
   async fetchSimilarEventsBySlug(slug: string, options?: { limit: number }) {

@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import { Role } from "../constants/constant";
 
 export interface ILoginDTO {
@@ -13,6 +14,7 @@ export interface IRegisterDTO extends ILoginDTO {
 }
 
 export interface IUser {
+  _id: Types.ObjectId;
   email: string;
   username: string;
   avatar: string | null;

@@ -8,7 +8,7 @@ interface IProps {
   location: string;
   date: string;
   time: string;
-  createdBy: { username: string };
+  creatorUsername: string;
   approved: boolean;
 }
 
@@ -19,7 +19,7 @@ const EventCard = ({
   location,
   slug,
   time,
-  createdBy,
+  creatorUsername,
   approved = false,
 }: IProps) => {
   return (
@@ -57,7 +57,7 @@ const EventCard = ({
         </div>
       </div>
       <div className="text-xs text-light-200 ml-auto">
-        Created by {createdBy?.username}
+        Created by {creatorUsername}
       </div>
     </Link>
   );

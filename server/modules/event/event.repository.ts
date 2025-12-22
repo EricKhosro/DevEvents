@@ -1,6 +1,6 @@
 // server/modules/event/event.repository.ts
 import connectDB from "@/server/db/mongodb";
-import Event from "./event.model";
+import Event, { EventSchema } from "./event.model";
 import { IEvent } from "@/shared/types/event.types";
 
 export const EventRepository = {
@@ -17,16 +17,12 @@ export const EventRepository = {
       .lean<IEvent[]>();
   },
 
-  async findBySlug(slug: string, options?: { includeUnapproved?: boolean }) {
+  async findBySlug(slug: string) {
     await connectDB();
 
     const query: Record<string, unknown> = { slug };
 
-    if (!options?.includeUnapproved) {
-      query.approved = true;
-    }
-
-    return Event.findOne(query).lean<IEvent | null>();
+    return Event.findOne(query).lean<EventSchema | null>();
   },
 
   async findSimilarEventsBySlug(

@@ -1,5 +1,4 @@
 import { Types } from "mongoose";
-import { IBaseResponse } from "./common.types";
 
 export interface IEvent {
   title: string;
@@ -18,6 +17,7 @@ export interface IEvent {
   tags: string[];
   createdAt: Date;
   updatedAt: Date;
-  createdBy: { _id: Types.ObjectId; username: string };
+  createdBy: Types.ObjectId;
+  creatorUsername: string;
   approved: boolean;
 }

@@ -1,9 +1,9 @@
-import CachedEventDetails from "./EventDetails";
+import EventDetails from "./EventDetails";
 import SimilarEvents from "./SimilarEvents";
 import { getSafeUserInfo } from "@/server/modules/user/user.action";
 import { Role } from "@/shared/constants/constant";
 
-const EventDetails = async ({
+const EventDetailsPage = async ({
   params,
 }: {
   params: Promise<{ slug: string }>;
@@ -13,10 +13,10 @@ const EventDetails = async ({
 
   return (
     <section id="event">
-      <CachedEventDetails params={params} canApprove={isAdmin} />
+      <EventDetails params={params} canApprove={isAdmin} />
       <SimilarEvents params={params} />
     </section>
   );
 };
 
-export default EventDetails;
+export default EventDetailsPage;

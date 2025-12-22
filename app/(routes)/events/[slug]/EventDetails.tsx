@@ -47,7 +47,6 @@ interface EventDetailsProps {
 const EventDetails = async ({ params, canApprove }: EventDetailsProps) => {
   const { slug } = await params;
   const { data, error } = await GetEventDetails(slug);
-  console.log({ data });
   const bookings = 10;
   if (error || !data) notFound();
 
@@ -70,7 +69,9 @@ const EventDetails = async ({ params, canApprove }: EventDetailsProps) => {
       <div className="header">
         <div className="flex items-center justify-between gap-4">
           <h1>Event Description</h1>
-          {canApprove && !data.approved && <ApproveEventButton slug={data.slug} />}
+          {canApprove && !data.approved && (
+            <ApproveEventButton slug={data.slug} />
+          )}
         </div>
         <p>{description}</p>
       </div>

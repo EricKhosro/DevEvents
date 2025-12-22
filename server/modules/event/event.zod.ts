@@ -6,7 +6,7 @@ export const CreateEventSchema = z.object({
   slug: z.string().min(3).toLowerCase(),
   description: z.string().min(8),
   overview: z.string().min(8),
-  image: z.string().url(),
+  image: z.file(),
   venue: z.string(),
   location: z.string(),
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),

@@ -10,16 +10,8 @@ interface EventsProps {
 
 const Events = async ({ pendingOnly }: EventsProps) => {
   const user = await getSafeUserInfo();
-  const isAdmin = !!user && user.role === Role.Admin;
-  const filter: Record<string, unknown> = {};
 
-  if (isAdmin && pendingOnly) {
-    filter.approved = false;
-  } else if (!isAdmin) {
-    filter.approved = true;
-  }
-
-  const events = await EventService.fetchEvents(filter);
+  const events = await EventService.fetchVisibleEvents(user);
   return (
     <div className="pt-20 space-y-7" id="cached-events">
       <h3>Featured Events</h3>

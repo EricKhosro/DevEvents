@@ -18,7 +18,6 @@ export async function POST(req: NextRequest) {
     const formData = await req.formData();
     const rawData = Object.fromEntries(formData.entries());
 
-    // ✅ Zod validation
     const parsed = CreateEventSchema.safeParse(rawData);
     if (!parsed.success) {
       return NextResponse.json(
@@ -45,7 +44,7 @@ export async function POST(req: NextRequest) {
       file,
       tags,
       agenda,
-      (userInfo as any)._id
+      userInfo
     );
 
     revalidateTag("events", { expire: 0 });

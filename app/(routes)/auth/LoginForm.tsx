@@ -33,7 +33,6 @@ const LoginForm = () => {
     return data;
   };
 
-  console.log(sanitizeRedirectUrl("/events/create"));
   const submitHandler = async () => {
     setLoading(true);
     const redirectURL = searchParam.get("redirect") || "/";

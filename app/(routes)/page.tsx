@@ -1,20 +1,8 @@
 import ExploreBtn from "@/components/ExploreBtn";
 import Link from "next/link";
 import CachedEvents from "./Events";
-import { getSafeUserInfo } from "@/server/modules/user/user.action";
-import { Role } from "@/shared/constants/constant";
-import { AdminPendingFilterToggle } from "@/components/events/AdminPendingFilterToggle";
 
-interface PageProps {
-  searchParams: Promise<{ pending?: string }>;
-}
-
-const Page = async ({ searchParams }: PageProps) => {
-  const { pending } = await searchParams;
-  // const user = await getSafeUserInfo();
-  // const isAdmin = !!user && user.role === Role.Admin;
-  // const pendingOnly = isAdmin && pending === "true";
-
+const Page = async () => {
   return (
     <section>
       <h1 className="text-center">
@@ -33,8 +21,6 @@ const Page = async ({ searchParams }: PageProps) => {
       </p>
 
       <ExploreBtn />
-
-      {/* {isAdmin && <AdminPendingFilterToggle />} */}
 
       <CachedEvents pendingOnly={false} />
     </section>

@@ -302,6 +302,11 @@
   }
 }
 
+#event input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1) brightness(1.2) saturate(1.2);
+  opacity: 0.9;
+}
+
 .google-btn svg {
   border-radius: 8px !important;
 }

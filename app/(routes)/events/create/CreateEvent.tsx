@@ -4,6 +4,7 @@ import StaticDropdown from "@/components/base/Dropdown/StaticDropdown";
 import DatePicker from "@/components/base/DatePicker";
 import TextArea from "@/components/base/TextArea";
 import TextInput from "@/components/base/TextInput";
+import TimePicker from "@/components/base/TimePicker";
 import { IEvent } from "@/shared/types/event.types";
 import Image from "next/image";
 import { ChangeEvent, useEffect, useState } from "react";
@@ -244,16 +245,17 @@ const CreateEvent = () => {
                 value={formValues.date}
                 onChange={changeHandler}
               />
-              <TextInput
+              <TimePicker
                 label="Time"
                 name="time"
-                placeholder="Time (10:10)"
                 value={formValues.time}
                 onChange={changeHandler}
               />
               <label className="relative flex items-center justify-center hover:bg-dark-300 text-white cursor-pointer w-full bg-dark-200 rounded-[6px] px-5 py-2.5 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary">
-                <div className="text-sm text-gray-400 flex flex-row! justify-start items-center gap-2">
-                  <p>{image ? image.name : "Upload event image or banner"}</p>
+                <div className="image-input text-sm text-gray-400 flex flex-row! justify-start items-center gap-2">
+                  <p className="image-input__name">
+                    {image ? image.name : "Upload event image or banner"}
+                  </p>
                   {image ? (
                     <Image
                       src="/icons/delete.svg"

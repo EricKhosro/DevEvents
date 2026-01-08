@@ -5,6 +5,7 @@ import { decode } from "jsonwebtoken";
 import { UserService } from "@/server/modules/user/user.service";
 import createHttpError from "http-errors";
 import { UserMessages } from "@/server/modules/user/user.message";
+import { Types } from "mongoose";
 
 export const GET = async (
   req: NextRequest
@@ -20,6 +21,6 @@ export const GET = async (
     username: user.username,
     avatar: user.avatar,
     role: user.role,
-    _id: user._id as string,
+    _id: user._id as Types.ObjectId,
   });
 };

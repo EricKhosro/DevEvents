@@ -9,7 +9,7 @@ import {
   Schema,
 } from "mongoose";
 
-export interface UserSchema extends Document, IUser {
+export interface UserSchema extends IUser {
   password: string;
 }
 export type UserLean = InferSchemaType<typeof UserSchema>; // for .lean()

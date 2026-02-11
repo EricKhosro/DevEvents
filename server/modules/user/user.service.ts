@@ -25,7 +25,7 @@ export const UserService = {
     email: string,
     password: string,
     rePassword: string,
-    username: string
+    username: string,
   ) {
     await this.checkUnique(email, username);
 
@@ -65,7 +65,7 @@ export const UserService = {
   async checkUnique(email: string, username: string) {
     const existing = await UserRepository.findForUniqueness(email, username);
 
-    if (!existing) return;
+    if (!existing) return true;
 
     if (existing.email === email) {
       throw createHttpError.Conflict(UserMessages.EmailExists);

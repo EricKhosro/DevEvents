@@ -9,8 +9,11 @@ export const RegisterSchema = z
       .trim()
       .min(3, UserMessages.UsernameMin)
       .max(30, UserMessages.UsernameMax),
-    password: z.string(UserMessages.PasswordRequired),
-    rePassword: z.string(UserMessages.RePasswordRequired),
+    password: z
+      .string(UserMessages.PasswordRequired)
+      .min(3, UserMessages.PasswordMin)
+      .max(30, UserMessages.PasswordMax),
+    rePassword: z.string(UserMessages.PasswordRequired),
   })
   .refine((data) => data.password === data.rePassword, {
     error: UserMessages.PasswordNotMatch,

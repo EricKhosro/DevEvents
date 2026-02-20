@@ -2,13 +2,8 @@ import EventCard from "@/components/EventCard";
 import { IEvent } from "@/shared/types/event.types";
 import { EventService } from "@/server/modules/event/event.service";
 import { getSafeUserInfo } from "@/server/modules/user/user.action";
-import { Role } from "@/shared/constants/constant";
 
-interface EventsProps {
-  pendingOnly?: boolean;
-}
-
-const Events = async ({ pendingOnly }: EventsProps) => {
+const Events = async () => {
   const user = await getSafeUserInfo();
 
   const events = await EventService.fetchVisibleEvents(user);

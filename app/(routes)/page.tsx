@@ -22,7 +22,7 @@ const Page = async () => {
 
       <ExploreBtn />
 
-      <CachedEvents pendingOnly={false} />
+      <CachedEvents />
     </section>
   );
 };

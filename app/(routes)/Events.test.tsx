@@ -1,5 +1,6 @@
 import { Role } from "@/shared/constants/constant";
 import { IEvent } from "@/shared/types/event.types";
+import { Types } from "mongoose";
 import { render, screen } from "@testing-library/react";
 import type { EventService as EventServiceType } from "@/server/modules/event/event.service";
 import type { getSafeUserInfo as getSafeUserInfoType } from "@/server/modules/user/user.action";
@@ -47,8 +48,10 @@ describe("Events", () => {
       tags: ["dev", "conference"],
       createdAt: new Date("2026-02-01T10:00:00.000Z"),
       updatedAt: new Date("2026-02-10T10:00:00.000Z"),
-      createdBy: "user-1" as unknown as IEvent["createdBy"],
-      creatorUsername: "nmai",
+      createdBy: {
+        _id: "user-1" as unknown as Types.ObjectId,
+        username: "nmai",
+      },
       approved: true,
     },
     {
@@ -68,8 +71,10 @@ describe("Events", () => {
       tags: ["web", "meetup"],
       createdAt: new Date("2026-02-05T10:00:00.000Z"),
       updatedAt: new Date("2026-02-12T10:00:00.000Z"),
-      createdBy: "user-2" as unknown as IEvent["createdBy"],
-      creatorUsername: "luffy",
+      createdBy: {
+        _id: "user-2" as unknown as Types.ObjectId,
+        username: "luffy",
+      },
       approved: true,
     },
   ];

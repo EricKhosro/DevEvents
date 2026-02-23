@@ -7,6 +7,7 @@ const Events = async () => {
   const user = await getSafeUserInfo();
 
   const events = await EventService.fetchVisibleEvents(user);
+  console.log({ events });
   return (
     <div className="pt-20 space-y-7" id="cached-events">
       <h3>Featured Events</h3>

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import type { EventCreatorRef } from "@/shared/types/event.types";
 
 interface IProps {
   slug: string;
@@ -8,7 +9,7 @@ interface IProps {
   location: string;
   date: string;
   time: string;
-  creatorUsername: string;
+  createdBy?: EventCreatorRef | null;
   approved: boolean;
 }
 
@@ -19,9 +20,17 @@ const EventCard = ({
   location,
   slug,
   time,
-  creatorUsername,
+  createdBy,
   approved = false,
 }: IProps) => {
+  const creatorUsername =
+    createdBy &&
+    typeof createdBy === "object" &&
+    "username" in createdBy &&
+    createdBy.username
+      ? createdBy.username
+      : "Unknown";
+
   return (
     <Link href={`/events/${slug}`} id="event-card" className="relative">
       {!approved ? (

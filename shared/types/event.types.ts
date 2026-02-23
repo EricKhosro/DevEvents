@@ -1,5 +1,12 @@
 import { Types } from "mongoose";
 
+export type EventCreatorRef =
+  | Types.ObjectId
+  | {
+      _id: Types.ObjectId;
+      username?: string | null;
+    };
+
 export interface IEvent {
   title: string;
   slug: string;
@@ -17,7 +24,6 @@ export interface IEvent {
   tags: string[];
   createdAt: Date;
   updatedAt: Date;
-  createdBy: Types.ObjectId;
-  creatorUsername: string;
+  createdBy: EventCreatorRef;
   approved: boolean;
 }

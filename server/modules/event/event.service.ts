@@ -13,7 +13,7 @@ export const EventService = {
     file: File,
     tags: string,
     agenda: string,
-    user: IUser
+    user: IUser,
   ) {
     const buffer = Buffer.from(await file.arrayBuffer());
 
@@ -24,7 +24,7 @@ export const EventService = {
           (error, result) => {
             if (error) return reject(error);
             resolve(result);
-          }
+          },
         )
         .end(buffer);
     });
@@ -86,7 +86,7 @@ export const EventService = {
       {
         limit: options?.limit || 5,
         includeUnapproved: isAdmin,
-      }
+      },
     );
   },
 

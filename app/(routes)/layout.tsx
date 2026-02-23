@@ -36,7 +36,7 @@ export default async function RootLayout({
           <Suspense>
             <Navbar />
           </Suspense>
-          <div className="absolute inset-0 top-0 z-[-1] min-h-screen">
+          <div className="pointer-events-none fixed inset-0 z-[-1]">
             <LightRays
               raysOrigin="top-center-offset"
               raysColor="#5dfeca"

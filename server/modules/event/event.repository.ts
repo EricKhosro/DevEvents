@@ -28,7 +28,7 @@ export const EventRepository = {
   async findSimilarEventsBySlug(
     excludedSlug: string,
     wantedTags?: string[],
-    options?: { includeUnapproved?: boolean; limit: number }
+    options?: { includeUnapproved?: boolean; limit: number },
   ) {
     await connectDB();
     const query: any = { slug: { $ne: excludedSlug } };
@@ -39,5 +39,10 @@ export const EventRepository = {
       .sort({ createdAt: -1 })
       .limit(options?.limit || 5)
       .lean<IEvent[]>();
+  },
+
+  async deleteEventBySlug(slug: string) {
+    await connectDB();
+    return Event.findOneAndUpdate({ slug }, { deleted: true });
   },
 };

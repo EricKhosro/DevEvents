@@ -12,7 +12,7 @@ interface IProps {
   time: string;
   createdBy?: EventCreatorRef | null;
   approved: boolean;
-  canDelete: boolean;
+  canDelete?: boolean;
 }
 
 const EventCard = ({
@@ -23,7 +23,7 @@ const EventCard = ({
   slug,
   time,
   createdBy,
-  canDelete,
+  canDelete = false,
   approved = false,
 }: IProps) => {
   const creatorUsername =

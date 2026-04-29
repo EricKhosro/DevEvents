@@ -19,7 +19,7 @@ const SimilarEvents = async ({
         {data &&
           data.length > 0 &&
           data.map((similarEvent) => (
-            <EventCard key={similarEvent.title} {...similarEvent} />
+            <EventCard key={similarEvent.title}  {...similarEvent} />
           ))}
       </div>
     </div>

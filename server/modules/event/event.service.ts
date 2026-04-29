@@ -2,10 +2,11 @@ import { v2 as cloudinary } from "cloudinary";
 import { EventRepository } from "./event.repository";
 import { getSafeUserInfo } from "../user/user.action";
 import { Role } from "@/shared/constants/constant";
-import { IEvent } from "@/shared/types/event.types";
 import { IUser } from "@/shared/types/auth.types";
 import { Types } from "mongoose";
 import { EventSchema } from "./event.model";
+import createHttpError from "http-errors";
+import { UserMessages } from "../user/user.message";
 
 export const EventService = {
   async createEvent(
@@ -42,7 +43,11 @@ export const EventService = {
   },
 
   async fetchEvents(filter: Record<string, unknown> = {}) {
-    return EventRepository.findMany(filter);
+    const safeFilter: Record<string, unknown> = { ...filter };
+    if (!("deleted" in safeFilter)) {
+      safeFilter.deleted = { $ne: true };
+    }
+    return EventRepository.findMany(safeFilter);
   },
 
   async fetchVisibleEvents(user: (IUser & { _id: Types.ObjectId }) | null) {
@@ -61,6 +66,7 @@ export const EventService = {
     const sanitizedSlug = this.sanitizeSlug(slug);
     const event = await EventRepository.findBySlug(sanitizedSlug);
     if (!event) return null;
+    if ((event as { deleted?: boolean }).deleted === true) return null;
     if (event.approved) return event;
 
     const user = await getSafeUserInfo();
@@ -80,7 +86,7 @@ export const EventService = {
     const user = await getSafeUserInfo();
     const isAdmin = user && user.role === Role.Admin ? true : false;
 
-    return await EventRepository.findSimilarEventsBySlug(
+    const results = await EventRepository.findSimilarEventsBySlug(
       sanitizedSlug,
       event?.tags,
       {
@@ -88,9 +94,32 @@ export const EventService = {
         includeUnapproved: isAdmin,
       },
     );
+    return results.filter(
+      (item) => (item as { deleted?: boolean }).deleted !== true,
+    );
   },
 
   sanitizeSlug(slug: string) {
     return slug.trim().toLowerCase();
+  },
+
+  async deleteEvent(slug: string) {
+    const sanitizedSlug = this.sanitizeSlug(slug);
+
+    const userInfo = await getSafeUserInfo();
+    if (!userInfo)
+      throw createHttpError.Unauthorized(UserMessages.Unauthorized);
+
+    let isAdmin = userInfo.role === Role.Admin;
+    let canDelete = isAdmin;
+    if (!isAdmin) {
+      const event = await this.fetchEventBySlug(sanitizedSlug);
+      if (userInfo._id === event?.createdBy) canDelete = true;
+    }
+
+    if (!canDelete) throw createHttpError.Forbidden(UserMessages.Forbidden);
+
+    const res = await EventRepository.deleteEventBySlug(sanitizedSlug);
+    console.log({ res });
   },
 };

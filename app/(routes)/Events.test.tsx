@@ -30,6 +30,9 @@ describe("Events", () => {
     getSafeUserInfo: jest.MockedFunction<typeof getSafeUserInfoType>;
   };
 
+  const userOneId = new Types.ObjectId();
+  const userTwoId = new Types.ObjectId();
+
   const mockedEvents: IEvent[] = [
     {
       title: "Event 1",
@@ -49,10 +52,11 @@ describe("Events", () => {
       createdAt: new Date("2026-02-01T10:00:00.000Z"),
       updatedAt: new Date("2026-02-10T10:00:00.000Z"),
       createdBy: {
-        _id: "user-1" as unknown as Types.ObjectId,
+        _id: userOneId,
         username: "nmai",
       },
       approved: true,
+      deleted: false,
     },
     {
       title: "Event 2",
@@ -72,16 +76,17 @@ describe("Events", () => {
       createdAt: new Date("2026-02-05T10:00:00.000Z"),
       updatedAt: new Date("2026-02-12T10:00:00.000Z"),
       createdBy: {
-        _id: "user-2" as unknown as Types.ObjectId,
+        _id: userTwoId,
         username: "luffy",
       },
       approved: true,
+      deleted: false,
     },
   ];
 
   it("renders events for signed-in user", async () => {
     getSafeUserInfo.mockResolvedValue({
-      _id: "user-1" as unknown as IEvent["createdBy"],
+      _id: userOneId,
       email: "a@b.com",
       username: "joyboy",
       avatar: "",

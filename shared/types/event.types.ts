@@ -26,4 +26,5 @@ export interface IEvent {
   updatedAt: Date;
   createdBy: EventCreatorRef;
   approved: boolean;
+  deleted: boolean;
 }

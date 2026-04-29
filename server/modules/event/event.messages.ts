@@ -3,4 +3,5 @@ export enum EventMessages {
   NotFound = "Event Not Found",
   SimilarEventError = "Error in Fetching Similar Events",
   EventDetailsError = "Error in Fetching Event Details",
+  UnableToDelete = "Unable to Delete Event",
 }

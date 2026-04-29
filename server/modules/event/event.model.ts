@@ -99,10 +99,15 @@ const EventSchema = new Schema<EventSchema>(
       default: false,
       index: true,
     },
+    deleted: {
+      type: Boolean,
+      default: false,
+      index: true,
+    },
   },
   {
     timestamps: true, // Auto-generate createdAt and updatedAt
-  }
+  },
 );
 
 // Pre-save hook for slug generation and data normalization
